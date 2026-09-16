@@ -1,0 +1,4 @@
+Flask>=3.0
+networkx>=3.0
+requests>=2.31
+google-genai>=2.3.0

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NE-SLAI &mdash; Smart Logistics &amp; Accessibility Intelligence, Northeast India</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">NE</span>
+    <div class="brand-text">
+      <h1>Smart Logistics &amp; Accessibility Intelligence Platform</h1>
+      <p>Northeast India &middot; live road conditions &middot; risk-aware routing</p>
+    </div>
+  </div>
+  <div class="live-indicator" id="liveIndicator">
+    <span class="dot"></span> connecting to government alert feed&hellip;
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- LEFT PANEL: controls -->
+  <aside class="panel">
+
+    <section class="card">
+      <h2>Plan a Route</h2>
+      <label for="sourceSelect">From</label>
+      <select id="sourceSelect"></select>
+
+      <label for="destSelect">To</label>
+      <select id="destSelect"></select>
+
+      <button id="findRouteBtn" class="btn-primary">Find Routes</button>
+      <p class="hint">Routing recalculates on real live road conditions &mdash; a landslide reported anywhere updates results instantly.</p>
+    </section>
+
+    <section class="card" id="routesCard" style="display:none;">
+      <h2>Route Options<span class="badge">LIVE RISK</span></h2>
+
+      <div id="routesList"></div>
+
+      <button id="aiAnalysisBtn" class="btn-primary">
+        🤖 AI Route Analysis
+      </button>
+
+      <div id="aiAnalysisResult" style="display:none;">
+        <h3>AI Route & Risk Analyst</h3>
+        <div id="aiAnalysisText"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Accessibility Intelligence</h2>
+      <label for="accessSelect">Check a location</label>
+      <select id="accessSelect"></select>
+      <div id="accessResult"></div>
+    </section>
+
+    <section class="card">
+      <h2>Live Incident Feed</h2>
+      <div id="incidentFeed"><p class="muted">No active incidents right now.</p></div>
+    </section>
+
+    <!-- <section class="card" id="simulatorCard">
+      <h2>Report an Incident <span class="badge">demo / control room</span></h2>
+      <p class="hint">In production this call is made automatically by GSI / IMD / State Disaster Management feeds. Here you can trigger one manually to see the live update happen.</p>
+      <label for="edgeSelect">Road segment</label>
+      <select id="edgeSelect"></select>
+      <label for="typeSelect">Type</label>
+      <select id="typeSelect">
+        <option value="landslide">Landslide</option>
+        <option value="flood">Flood</option>
+        <option value="roadblock">Roadblock / construction</option>
+        <option value="accident">Accident</option>
+        <option value="snow_closure">Snow closure</option>
+      </select>
+      <label for="severitySelect">Severity</label>
+      <select id="severitySelect">
+        <option value="minor">Minor (slower)</option>
+        <option value="moderate">Moderate (much slower)</option>
+        <option value="severe">Severe (road closed)</option>
+      </select>
+      <button id="reportBtn" class="btn-secondary">Report Now</button>
+    </section> -->
+
+  </aside>
+
+  <!-- MAP -->
+  <section class="map-wrap">
+    <div id="map"></div>
+  </section>
+
+</main>
+
+<div id="toastHost"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>
