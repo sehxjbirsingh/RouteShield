@@ -1,23 +1,4 @@
-"""
-routing_engine.py
-=================
-Builds a graph of the real NE India road network (graph_data.py) and, on
-every request, re-weights every edge using CURRENT live conditions from
-incident_store.py before computing routes. This is what makes the "best
-route" answer change the instant an incident is reported — the graph
-itself is rebuilt with fresh weights on every call, nothing is cached.
 
-Algorithm:
-  - networkx.shortest_simple_paths (Yen's algorithm) to get several
-    loopless candidate paths ordered by weighted travel time.
-  - Each candidate is scored on: total time, total distance, a 0-100 risk
-    score (based on terrain difficulty + active incidents along it), and
-    whether it currently contains a severe/blocked edge.
-  - The first candidate with no blocked edge and the lowest weighted time
-    is marked "recommended". Others are "alternate". Any route containing
-    a currently blocked edge is marked "not_advisable" instead of being
-    silently dropped, so the user can still see why to avoid it.
-"""
 
 import networkx as nx
 import requests
@@ -26,6 +7,7 @@ import requests
 from graph_data import NODES, EDGES, TERRAIN_BASE_SPEED_KMPH
 import incident_store
 import weather_service
+import morth_data
 
 OSRM_URL = "https://router.project-osrm.org/route/v1/driving"
 OSRM_TIMEOUT = 10
@@ -71,29 +53,23 @@ def build_live_graph():
             risk_points += 7
         if active_incident:
             risk_points += {"minor": 10, "moderate": 25, "severe": 50}[active_incident["severity"]]
-            weather_a = weather_service.get_weather(
+
+
+        weather_a = weather_service.get_weather(
             NODES[a]["lat"],
-            NODES[a]["lon"]
-            )
+            NODES[a]["lon"])
 
-            weather_b = weather_service.get_weather(
+        weather_b = weather_service.get_weather(
             NODES[b]["lat"],
-            NODES[b]["lon"]
-            )
+            NODES[b]["lon"])
 
-            weather_risk_a = weather_service.calculate_weather_risk(
-            weather_a
-            )
+        weather_risk_a = weather_service.calculate_weather_risk(weather_a)
 
-            weather_risk_b = weather_service.calculate_weather_risk(
-            weather_b
-            )
+        weather_risk_b = weather_service.calculate_weather_risk(weather_b)
 
-            weather_risk = round(
-            (weather_risk_a + weather_risk_b) / 2
-            )
+        weather_risk = round((weather_risk_a + weather_risk_b) / 2)
 
-            risk_points += weather_risk
+        risk_points += weather_risk
 
         G.add_edge(
             a, b,

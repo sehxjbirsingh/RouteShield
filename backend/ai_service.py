@@ -1,7 +1,10 @@
 import os
 import json
-
+from pathlib import Path
+from dotenv import load_dotenv
 from google import genai
+
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 
 GEMINI_MODEL = "gemini-3.6-flash"
