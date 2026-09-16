@@ -215,9 +215,12 @@ def stream():
 
     return Response(event_stream(), mimetype="text/event-stream")
 
-if __name__ == "__main__":
-    incident_feed.start()
+# Start the NDMA live incident feed when the app is loaded.
+# This is required for Gunicorn/Render production deployment.
+incident_feed.start()
 
+
+if __name__ == "__main__":
     app.run(
         debug=True,
         threaded=True,
